@@ -24,14 +24,21 @@ class App extends React.Component {
       const url = `https://itunes.apple.com/search?term=${artist}&media=music&entity=album`;
       const albums = await axios.get(url).then((res) => res.data.results);
       const realName = (albums.length && albums[0].artistName) || artist;
-      this.setState({ artist: realName, albums });
-      localStorage.setItem('artist', JSON.stringify(artist));
-      localStorage.setItem('albums', JSON.stringify(albums));
+      // this.setState({ artist: realName, albums });
+      // localStorage.setItem('artist', JSON.stringify(artist));
+      // localStorage.setItem('albums', JSON.stringify(albums));
     } catch (error) {
       console.log(error);
       this.props.history.push('/OOPS');
     }
   };
+
+  handleChange = e => {
+    this.setState({
+      artist: e.target.value
+    });
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     const regex1 = /\s\s+/g;
@@ -55,7 +62,7 @@ class App extends React.Component {
     return (
       <div className='music-collection-finder'>
         <Header />
-        <ArtistForm handleSubmit={this.handleSubmit} />
+        <ArtistForm handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
         {this.state.artist && (
           <Artist artist={this.state.artist} albums={this.state.albums} />
         )}
