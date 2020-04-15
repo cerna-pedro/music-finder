@@ -61,7 +61,10 @@ class App extends React.Component {
     return (
       <div className='music-collection-finder'>
         <Header />
-        <ArtistForm handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
+        <ArtistForm 
+          handleSubmit={this.handleSubmit} 
+          handleChange={this.handleChange} 
+          artist = {this.state.artist} />
         {this.state.artist && (
           <Artist artist={this.state.artist} albums={this.state.albums} />
         )}

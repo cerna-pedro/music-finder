@@ -9,6 +9,7 @@ const ArtistForm = props => {
         id='artist'
         placeholder='Artist Name...'
         onChange={props.handleChange}
+        value={props.artist}
       />
       <button className="artist-form__button" type='submit'>Go</button>
     </form>
