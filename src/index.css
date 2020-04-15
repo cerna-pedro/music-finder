@@ -38,7 +38,7 @@ ul {
   list-style-type: none;
 }
 
-.album{
+.album {
   cursor: pointer;
 }
 
@@ -84,31 +84,37 @@ li {
   font-family: inherit;
   font-size: inherit;
   width: 80%;
-  padding: .5rem;
-  margin-bottom: .5rem;
-  border-radius: .2rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.2rem;
   text-align: center;
 }
 .artist-form__button {
   min-width: 40%;
   max-width: 50%;
-  padding: .2rem;
-  border-radius: .5rem;
+  padding: 0.2rem;
+  border-radius: 0.5rem;
   background-color: black;
   color: white;
-  padding: .2rem;
+  padding: 0.2rem;
   font-size: inherit;
   font-family: inherit;
   cursor: pointer;
   text-align: center;
-  transition: color .2s linear;
+  transition: color 0.2s linear;
   margin-bottom: 1rem;
 }
 
-.artist-form__button:hover{
-  color: black;
-  background-color:white ;
+.artist-form__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-color: gray;
 }
-.paragraph{
-  margin-top: .5rem;
+
+.artist-form__button:hover:enabled {
+  color: black;
+  background-color: white;
+}
+.paragraph {
+  margin-top: 0.5rem;
 }

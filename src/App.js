@@ -9,6 +9,7 @@ class App extends React.Component {
   state = {
     artist: null,
     albums: [],
+    input: '',
   };
   componentDidMount() {
     if (localStorage.getItem('artist') && localStorage.getItem('albums')) {
@@ -24,7 +25,8 @@ class App extends React.Component {
       const url = `https://itunes.apple.com/search?term=${artist}&media=music&entity=album`;
       const albums = await axios.get(url).then((res) => res.data.results);
       const realName = (albums.length && albums[0].artistName) || artist;
-      this.setState({ artist: realName, albums });
+
+      this.setState({ artist: realName, albums, input: realName });
       localStorage.setItem('artist', JSON.stringify(artist));
       localStorage.setItem('albums', JSON.stringify(albums));
     } catch (error) {
@@ -45,17 +47,38 @@ class App extends React.Component {
     this.getAlbums(artistName);
   };
 
+  handleInput = (e) => {
+    this.setState({ input: e.target.value });
+  };
+
   albumClick = (artistName, albumName, link, year, url) => {
     this.props.history.push(
       `/${artistName}/${albumName}/${link}/${year}/${url}`
     );
   };
 
+  reset = () => {
+    this.setState({
+      artist: null,
+      albums: [],
+      input: '',
+    });
+    localStorage.removeItem('artist');
+    localStorage.removeItem('albums');
+  };
+
   render() {
     return (
       <div className='music-collection-finder'>
         <Header />
-        <ArtistForm handleSubmit={this.handleSubmit} />
+        <ArtistForm
+          handleSubmit={this.handleSubmit}
+          artist={this.state.artist}
+          input={this.state.input}
+          handleInput={this.handleInput}
+          albums={this.state.albums}
+          reset={this.reset}
+        />
         {this.state.artist && (
           <Artist artist={this.state.artist} albums={this.state.albums} />
         )}
