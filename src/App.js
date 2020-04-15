@@ -12,6 +12,8 @@ class App extends React.Component {
   };
   componentDidMount() {
     if (localStorage.getItem('artist') && localStorage.getItem('albums')) {
+      // merge local storage data into an object
+      // instead of multiple keys
       this.setState({
         artist: JSON.parse(localStorage.getItem('artist')),
         albums: JSON.parse(localStorage.getItem('albums')),
@@ -22,27 +24,31 @@ class App extends React.Component {
   getAlbums = async (artist) => {
     try {
       const url = `https://itunes.apple.com/search?term=${artist}&media=music&entity=album`;
-      const albums = await axios.get(url).then((res) => res.data.results);
-      const realName = (albums.length && albums[0].artistName) || artist;
-      this.setState({ artist: realName, albums });
+      const response = await axios.get(url);
+      const albumData = response.data.results;
+      const realName = (albumData.length && albumData[0].artistName) || artist;
+      this.setState({ artist: realName, albums: albumData });
+
+      // these 2 items can be merged into an object so we're
+      // only setting and getting one local storage item
       localStorage.setItem('artist', JSON.stringify(artist));
-      localStorage.setItem('albums', JSON.stringify(albums));
+      localStorage.setItem('albums', JSON.stringify(albumData));
     } catch (error) {
       console.log(error);
       this.props.history.push('/OOPS');
     }
   };
-  handleSubmit = (e) => {
+
+  handleChange = e => {
+    this.setState({
+      artist: e.target.value
+    });
+  }
+
+  handleSubmit = e => {
     e.preventDefault();
-    const regex1 = /\s\s+/g;
-    const regex2 = /(\b[a-z](?!\s))/g;
-    const artistName = e.currentTarget.firstChild.value
-      .trim()
-      .replace(regex1, ' ')
-      .replace(regex2, (letter) => {
-        return letter.toUpperCase();
-      });
-    this.getAlbums(artistName);
+    const artist = this.state.artist;
+    this.getAlbums(artist);
   };
 
   albumClick = (artistName, albumName, link, year, url) => {
@@ -55,7 +61,10 @@ class App extends React.Component {
     return (
       <div className='music-collection-finder'>
         <Header />
-        <ArtistForm handleSubmit={this.handleSubmit} />
+        <ArtistForm 
+          handleSubmit={this.handleSubmit} 
+          handleChange={this.handleChange} 
+          artist = {this.state.artist} />
         {this.state.artist && (
           <Artist artist={this.state.artist} albums={this.state.albums} />
         )}
